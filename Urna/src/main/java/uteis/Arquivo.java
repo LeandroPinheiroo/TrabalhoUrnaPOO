@@ -25,7 +25,7 @@ import java.util.ArrayList;
  */
 public class Arquivo {
 
-    public Integer[][] leImagemMatriz(String caminho) {
+    public static Integer[][] leImagemMatriz(String caminho) {
         Integer matriz[][] = null;
         try {
             FileReader arq = new FileReader(caminho);
@@ -55,11 +55,18 @@ public class Arquivo {
         }
         return matriz;
     }
-     public static void criaArquivoImagem(String conteudo, String caminho) throws IOException {
-        BufferedWriter buffWrite = new BufferedWriter(new FileWriter(caminho));
-        System.out.println("Escreva algo: ");
-        buffWrite.append(conteudo);
-        buffWrite.close();
+
+    public static void criaArquivo(String conteudo, String caminho) throws IOException {
+        FileWriter arquivo;
+        try {
+            arquivo = new FileWriter(new File(caminho));
+            arquivo.write(conteudo);
+            arquivo.close();
+        } catch (IOException e) {
+            e.getMessage();
+        } catch (Exception e) {
+            e.getMessage();
+        }
     }
 
     public static void criaArquivoJSON(ArrayList<Object> lista, String caminho) {

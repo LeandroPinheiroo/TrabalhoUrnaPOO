@@ -336,7 +336,7 @@ public class Votacao extends javax.swing.JFrame {
         campoPresidente.setText("Presidente");
 
         campoNumero.setEditable(false);
-        campoNumero.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        campoNumero.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         campoNumero.setRequestFocusEnabled(false);
 
         jLabel1.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
