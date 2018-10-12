@@ -7,16 +7,11 @@ package uteis;
 
 import com.google.gson.Gson;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 
 /**
@@ -79,7 +74,7 @@ public class Arquivo {
         }
         PrintWriter gravarArq = new PrintWriter(arq);
         for (Object l : lista) {
-            gravarArq.printf("%s", gson.toJson(l));
+            gravarArq.printf("%s\n", gson.toJson(l));
         }
         try {
             arq.close();
@@ -87,5 +82,4 @@ public class Arquivo {
             ex.getMessage();
         }
     }
-
 }

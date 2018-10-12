@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.swing.JOptionPane;
 import modelo.Eleitor;
 
@@ -83,6 +84,50 @@ public class Login extends javax.swing.JFrame {
         }
     }
 
+    public boolean comparaMatriz(Integer matriz[][], Eleitor eleitor) {
+        int linhas;
+        int colunas;
+        linhas = matriz.length;
+        colunas = matriz[0].length;
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+                if (!Objects.equals(matriz[i][j], eleitor.getMatriz_imagem()[i][j])) {
+                    JOptionPane.showMessageDialog(this, "Imagem de acesso invalida", "Erro ao entrar", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean validaCampos() {
+        if (campoCpf.getText().equals("   .   .   -  ")) {
+            JOptionPane.showMessageDialog(this, "Entre com o CPF para efetuar login", "Erro ao entrar", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } else if (campoArquivo.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Entre com a imagem de acesso para efetuar login", "Erro ao entrar", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean validaLogin(Integer matriz[][], String cpf, ArrayList<Eleitor> eleitores) {
+        if(validaCampos() == false){
+            return false;
+        }
+        for (Eleitor eleitor : eleitores) {
+            if (eleitor.getCpf().equals(cpf)) {
+                if (comparaMatriz(matriz, eleitor)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        JOptionPane.showMessageDialog(this, "CPF não cadastrado", "Erro ao entrar", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+
     public Boolean verificaLogin() {
         Integer imagem[][] = Arquivo.leImagemMatriz(campoArquivo.getText());
         Gson gson = new Gson();
@@ -96,27 +141,16 @@ public class Login extends javax.swing.JFrame {
                 eleitores.add(gson.fromJson(strLine, Eleitor.class));
             }
             leitor.close();
-
-            for (Eleitor e : eleitores) {
-                if(e.getCpf().equals(campoCpf.getText()))
-                    if (e.getMatriz_imagem().equals(imagem)) {
-                        JOptionPane.showMessageDialog(this, "Usuário conectado com sucesso!");
-                        return true;
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(this, "Imagem não reconhecida!");
-                    }
-                else{
-                    JOptionPane.showMessageDialog(this, "CPF não encontrado!!");
-                }
+            if (validaLogin(imagem, campoCpf.getText(), eleitores)) {
+                JOptionPane.showMessageDialog(this, "Usuario Logado com sucesso", "Entrou", JOptionPane.INFORMATION_MESSAGE);
+                return true;
             }
-
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        JOptionPane.showMessageDialog(this, "Falha em conectar no sistema!!");
+        JOptionPane.showMessageDialog(this, "Falha ao conectar no sistema!!", "Erro", JOptionPane.ERROR_MESSAGE);
         return false;
     }
 
@@ -218,10 +252,10 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LabelUrna1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(botaoArquivo)
-                    .addComponent(campoArquivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(campoArquivo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(39, 39, 39)
                 .addComponent(botaoEntrar)
-                .addGap(94, 94, 94))
+                .addContainerGap())
         );
 
         pack();
@@ -238,7 +272,10 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoArquivoActionPerformed
 
     private void botaoEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEntrarActionPerformed
-        verificaLogin();
+        if(verificaLogin()){
+            new Votacao().setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_botaoEntrarActionPerformed
 
     /**
