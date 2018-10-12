@@ -23,7 +23,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 import javax.swing.JOptionPane;
+import modelo.Candidato;
 import modelo.Eleitor;
+import modelo.Partido;
 
 /**
  *
@@ -34,9 +36,16 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Logine
      */
+    ArrayList<Candidato> candidatos;
+    ArrayList<Partido> partidos;
+
     public Login() {
         initComponents();
+        this.candidatos = geraObjetoCandidato();
+        this.partidos = geraObjetoPartido();
         this.criaArquivoEleitores();
+        this.criaArquivoCandidatos();
+        this.criaArquivoPartidos();
         this.setLocationRelativeTo(null);
         this.setExtendedState(HIDE_ON_CLOSE);
         campoCpf.setEditable(true);
@@ -83,6 +92,24 @@ public class Login extends javax.swing.JFrame {
             }
         }
     }
+    public void criaArquivoPartidos() {
+        ConexaoDrive.getInstance();
+        List<com.google.api.services.drive.model.File> lista_arquivos = ConexaoDrive.listaArquivos();
+        for (com.google.api.services.drive.model.File lista_arquivo : lista_arquivos) {
+            if (lista_arquivo.getName().equals("partidos.json")) {
+                try {
+                    String conteudo = ConexaoDrive.leArquivoGD(lista_arquivo.getId());
+                    Arquivo.criaArquivo(conteudo, "partidos.json");
+                    return;
+                } catch (IOException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (HTTPException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                return;
+            }
+        }
+    }
 
     public boolean comparaMatriz(Integer matriz[][], Eleitor eleitor) {
         int linhas;
@@ -112,7 +139,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     public boolean validaLogin(Integer matriz[][], String cpf, ArrayList<Eleitor> eleitores) {
-        if(validaCampos() == false){
+        if (validaCampos() == false) {
             return false;
         }
         for (Eleitor eleitor : eleitores) {
@@ -126,6 +153,48 @@ public class Login extends javax.swing.JFrame {
         }
         JOptionPane.showMessageDialog(this, "CPF não cadastrado", "Erro ao entrar", JOptionPane.ERROR_MESSAGE);
         return false;
+    }
+
+    public ArrayList<Partido> geraObjetoPartido() {
+        Gson gson = new Gson();
+        FileInputStream arquivoEntrada;
+        ArrayList<Partido> partidos= null;
+        try {
+            arquivoEntrada = new FileInputStream("partidos.json");
+            BufferedReader leitor = new BufferedReader(new InputStreamReader(arquivoEntrada));
+            partidos = new ArrayList();
+            String strLine;
+            while ((strLine = leitor.readLine()) != null) {
+                partidos.add(gson.fromJson(strLine, Partido.class));
+            }
+            leitor.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return partidos;
+    }
+    
+    public ArrayList<Candidato> geraObjetoCandidato() {
+        Gson gson = new Gson();
+        FileInputStream arquivoEntrada;
+        ArrayList<Candidato> candidatos= null;
+        try {
+            arquivoEntrada = new FileInputStream("candidatos.json");
+            BufferedReader leitor = new BufferedReader(new InputStreamReader(arquivoEntrada));
+            candidatos = new ArrayList();
+            String strLine;
+            while ((strLine = leitor.readLine()) != null) {
+                candidatos.add(gson.fromJson(strLine, Candidato.class));
+            }
+            leitor.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return candidatos;
     }
 
     public Boolean verificaLogin() {
@@ -272,8 +341,8 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoArquivoActionPerformed
 
     private void botaoEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEntrarActionPerformed
-        if(verificaLogin()){
-            new Votacao().setVisible(true);
+        if (verificaLogin()) {
+            new Votacao(this.candidatos,this.partidos).setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_botaoEntrarActionPerformed

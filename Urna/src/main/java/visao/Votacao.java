@@ -7,7 +7,10 @@ package visao;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import javax.swing.JTextField;
+import modelo.Candidato;
+import modelo.Partido;
 
 /**
  *
@@ -18,12 +21,23 @@ public class Votacao extends javax.swing.JFrame {
     /**
      * Creates new form Votacao
      */
-    public Votacao() {
+    ArrayList<Candidato> candidatos;
+    ArrayList<Partido> partidos;
+    public Votacao(ArrayList<Candidato> candidatos,ArrayList<Partido> partidos) {
         initComponents();
+        this.candidatos = candidatos;
+        this.partidos = partidos;
         setPropriedades();
     }
     
-    public void setCandidadto(){
+    public void setCandidadto(int numero){
+        for (Candidato candidato : this.candidatos) {
+            if (candidato.getNumero() == numero) {
+                campoNome.setText(candidato.getNome());
+                campoPartido.setText(candidato.getPartido().getNome());
+                campoNumero.setText(String.valueOf(candidato.getNumero()));
+            }
+        }
         
     }
     
@@ -32,8 +46,12 @@ public class Votacao extends javax.swing.JFrame {
         if(temp.length() < 2)
             temp += e.getActionCommand();
             campoVotacao.setText(temp);
+        if(temp.length() == 2){
+            System.out.println("ENTROU");
+            this.setCandidadto(Integer.parseInt(temp));
+        }
     }
-    
+
     public void votacao(){
         
     }
@@ -42,6 +60,12 @@ public class Votacao extends javax.swing.JFrame {
         
     }
     
+    public void limpaCampos(){
+        campoNome.setText("");
+        campoNumero.setText("");
+        campoPartido.setText("");
+        campoVotacao.setText("");
+    }
     
     public final void setPropriedades(){
         botaoBranco.setContentAreaFilled(false);
@@ -345,12 +369,14 @@ public class Votacao extends javax.swing.JFrame {
 
         campoNome.setEditable(false);
         campoNome.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        campoNome.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         jLabel3.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         jLabel3.setText("Partido:");
 
         campoPartido.setEditable(false);
         campoPartido.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        campoPartido.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         campoVotacao.setEditable(false);
         campoVotacao.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
@@ -485,7 +511,7 @@ public class Votacao extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoBrancoActionPerformed
 
     private void botaoCorrigeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCorrigeActionPerformed
-        campoVotacao.setText("");
+        this.limpaCampos();
     }//GEN-LAST:event_botaoCorrigeActionPerformed
 
     private void botaoConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConfirmaActionPerformed
@@ -495,37 +521,7 @@ public class Votacao extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Votacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Votacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Votacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Votacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Votacao().setVisible(true);
-            }
-        });
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botao0;
