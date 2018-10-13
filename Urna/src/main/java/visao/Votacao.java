@@ -47,7 +47,6 @@ public class Votacao extends javax.swing.JFrame {
             temp += e.getActionCommand();
             campoVotacao.setText(temp);
         if(temp.length() == 2){
-            System.out.println("ENTROU");
             this.setCandidadto(Integer.parseInt(temp));
         }
     }
