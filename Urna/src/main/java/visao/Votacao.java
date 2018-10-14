@@ -5,12 +5,16 @@
  */
 package visao;
 
+import dao.VotoDao;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import modelo.Candidato;
+import modelo.Eleitor;
 import modelo.Partido;
+import modelo.Voto;
 
 /**
  *
@@ -23,10 +27,14 @@ public class Votacao extends javax.swing.JFrame {
      */
     ArrayList<Candidato> candidatos;
     ArrayList<Partido> partidos;
-    public Votacao(ArrayList<Candidato> candidatos,ArrayList<Partido> partidos) {
+    Eleitor eleitor;
+    Candidato candidato;
+    VotoDao votoDao;
+    public Votacao(ArrayList<Candidato> candidatos,ArrayList<Partido> partidos,Eleitor eleitor) {
         initComponents();
         this.candidatos = candidatos;
         this.partidos = partidos;
+        this.eleitor = eleitor;
         setPropriedades();
     }
     
@@ -36,9 +44,9 @@ public class Votacao extends javax.swing.JFrame {
                 campoNome.setText(candidato.getNome());
                 campoPartido.setText(candidato.getPartido().getNome());
                 campoNumero.setText(String.valueOf(candidato.getNumero()));
+                this.candidato = candidato;
             }
         }
-        
     }
     
     public void numeroPressionado(ActionEvent e){
@@ -51,12 +59,33 @@ public class Votacao extends javax.swing.JFrame {
         }
     }
 
-    public void votacao(){
-        
+    public Voto votacao(){
+        Voto voto = new Voto();
+        voto.setCandidato(this.candidato);
+        voto.setEleitor(this.eleitor);
+        return voto;
     }
     
-    public void votaBranco(){
-        
+    public Voto votaBranco(){
+        Voto voto = new Voto();
+        voto.setEleitor(eleitor);
+        voto.setCandidato(null);
+        return voto;
+    }
+    
+    public String validaCampos(){
+        if(campoNome.getText().equals("") || campoNumero.getText().equals("") || campoPartido.getText().equals("")
+                || campoVotacao.getText().equals("")){
+            return "Candidato não selecionado! Por favor selecione seu candidato";
+        }
+        return "";
+    }
+    
+    public void limparCampos(){
+        campoNome.setText("");
+        campoNumero.setText("");
+        campoPartido.setText("");
+        campoVotacao.setText("");
     }
     
     public void limpaCampos(){
@@ -514,7 +543,15 @@ public class Votacao extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoCorrigeActionPerformed
 
     private void botaoConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConfirmaActionPerformed
-        
+        String erro = validaCampos();
+        if (!erro.equals("")) {
+            JOptionPane.showMessageDialog(this, erro, "Erro ao cadastrar Eleitor", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Voto v = votacao();
+        votoDao.cadastraVoto(v);
+        JOptionPane.showMessageDialog(this, "Voto cadastrado com sucesso", "Cadastramento de Voto", JOptionPane.INFORMATION_MESSAGE);
+        this.limparCampos();
     }//GEN-LAST:event_botaoConfirmaActionPerformed
 
     /**

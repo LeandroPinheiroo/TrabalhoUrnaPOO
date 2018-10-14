@@ -38,7 +38,7 @@ public class Login extends javax.swing.JFrame {
      */
     ArrayList<Candidato> candidatos;
     ArrayList<Partido> partidos;
-
+    Eleitor eleitor = null;
     public Login() {
         initComponents();
         this.candidatos = geraObjetoCandidato();
@@ -145,6 +145,7 @@ public class Login extends javax.swing.JFrame {
         for (Eleitor eleitor : eleitores) {
             if (eleitor.getCpf().equals(cpf)) {
                 if (comparaMatriz(matriz, eleitor)) {
+                    this.eleitor = eleitor;
                     return true;
                 } else {
                     return false;
@@ -342,7 +343,7 @@ public class Login extends javax.swing.JFrame {
 
     private void botaoEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEntrarActionPerformed
         if (verificaLogin()) {
-            new Votacao(this.candidatos,this.partidos).setVisible(true);
+            new Votacao(this.candidatos,this.partidos,eleitor).setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_botaoEntrarActionPerformed
