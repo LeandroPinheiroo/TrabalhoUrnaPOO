@@ -30,11 +30,13 @@ public class Votacao extends javax.swing.JFrame {
     Eleitor eleitor;
     Candidato candidato;
     VotoDao votoDao;
-    public Votacao(ArrayList<Candidato> candidatos,ArrayList<Partido> partidos,Eleitor eleitor) {
+    public Votacao(ArrayList<Candidato> candidatos,ArrayList<Partido> partidos,Eleitor eleitor,VotoDao votoDao) {
         initComponents();
+        this.setTitle("Urna");
         this.candidatos = candidatos;
         this.partidos = partidos;
         this.eleitor = eleitor;
+        this.votoDao = votoDao;
         setPropriedades();
     }
     
@@ -552,6 +554,7 @@ public class Votacao extends javax.swing.JFrame {
         votoDao.cadastraVoto(v);
         JOptionPane.showMessageDialog(this, "Voto cadastrado com sucesso", "Cadastramento de Voto", JOptionPane.INFORMATION_MESSAGE);
         this.limparCampos();
+        this.dispose();
     }//GEN-LAST:event_botaoConfirmaActionPerformed
 
     /**

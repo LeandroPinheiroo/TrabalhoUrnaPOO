@@ -5,6 +5,12 @@
  */
 package visao;
 
+import dao.VotoDao;
+import java.util.ArrayList;
+import uteis.Arquivo;
+import conexao.ConexaoDrive;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author weth
@@ -14,8 +20,24 @@ public class EnviaVotos extends javax.swing.JFrame {
     /**
      * Creates new form EnviaVotos
      */
-    public EnviaVotos() {
+    
+    VotoDao votoDao;
+    public EnviaVotos(VotoDao votoDao) {
         initComponents();
+        this.setLocationRelativeTo(null);
+        this.setTitle("Envia votos");
+        this.votoDao = votoDao;
+    }
+    
+    public void EnviarVotos(){
+        if(votoDao.retornaVotos().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Não foi realizado nenhum voto, arquivo não pode ser enviado!");
+        }else{
+            Arquivo.criaArquivoJSON((ArrayList<Object>)(Object)votoDao.retornaVotos(),"votação.json");
+            ConexaoDrive.getInstance();
+            ConexaoDrive.criaArquivo("votação.json","votação.json");
+            JOptionPane.showMessageDialog(this, "Dados de votação enviados com sucesso!");
+        }
     }
 
     /**
@@ -27,26 +49,62 @@ public class EnviaVotos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jLabel1 = new javax.swing.JLabel();
+        botaoEnvia = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(700, 400));
+        setPreferredSize(new java.awt.Dimension(700, 400));
+
+        jLabel1.setFont(new java.awt.Font("Monospaced", 0, 24)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Envia Votos");
+
+        botaoEnvia.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        botaoEnvia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/enviarNuvem.png"))); // NOI18N
+        botaoEnvia.setLabel("Envia Votos");
+        botaoEnvia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEnviaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(253, 253, 253)
+                .addComponent(botaoEnvia, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(265, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
+                .addComponent(botaoEnvia)
+                .addGap(110, 110, 110))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botaoEnviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEnviaActionPerformed
+        EnviarVotos();
+    }//GEN-LAST:event_botaoEnviaActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botaoEnvia;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

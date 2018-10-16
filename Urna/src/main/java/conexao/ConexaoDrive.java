@@ -25,8 +25,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.ws.http.HTTPException;
@@ -41,7 +43,7 @@ public class ConexaoDrive {
      * Global instance of the scopes required by this quickstart. If modifying
      * these scopes, delete your previously saved tokens/ folder.
      */
-    private static final List<String> SCOPES = Collections.singletonList(DriveScopes.DRIVE);
+    private static final List<String> SCOPES = new ArrayList(DriveScopes.all());
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
     private static NetHttpTransport HTTP_TRANSPORT = null;
@@ -60,9 +62,9 @@ public class ConexaoDrive {
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)    
                 .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
-                .setAccessType("online")
+                .setAccessType("offline")
                 .build();
 
         return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");

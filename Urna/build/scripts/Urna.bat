@@ -66,7 +66,7 @@ set CMD_LINE_ARGS=%*
 set CLASSPATH=%APP_HOME%\lib\Urna-1.0.jar;%APP_HOME%\lib\google-api-client-1.25.0.jar;%APP_HOME%\lib\google-oauth-client-jetty-1.23.0.jar;%APP_HOME%\lib\google-api-services-drive-v3-rev110-1.23.0.jar;%APP_HOME%\lib\gson-2.8.1.jar;%APP_HOME%\lib\google-oauth-client-1.25.0.jar;%APP_HOME%\lib\google-http-client-jackson2-1.25.0.jar;%APP_HOME%\lib\guava-20.0.jar;%APP_HOME%\lib\google-oauth-client-java6-1.23.0.jar;%APP_HOME%\lib\jetty-6.1.26.jar;%APP_HOME%\lib\jetty-util-6.1.26.jar;%APP_HOME%\lib\servlet-api-2.5-20081211.jar;%APP_HOME%\lib\google-http-client-1.25.0.jar;%APP_HOME%\lib\jackson-core-2.9.6.jar;%APP_HOME%\lib\jsr305-3.0.2.jar;%APP_HOME%\lib\httpclient-4.5.5.jar;%APP_HOME%\lib\j2objc-annotations-1.1.jar;%APP_HOME%\lib\httpcore-4.4.9.jar;%APP_HOME%\lib\commons-logging-1.2.jar;%APP_HOME%\lib\commons-codec-1.10.jar
 
 @rem Execute Urna
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %URNA_OPTS%  -classpath "%CLASSPATH%" visao/Login %CMD_LINE_ARGS%
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %URNA_OPTS%  -classpath "%CLASSPATH%" visao/Menu %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell
