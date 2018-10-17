@@ -23,14 +23,6 @@ public class VotoDao {
         this.votos.add(voto);
     }
     
-    public void removeVoto(Voto voto){
-        for (Voto v : votos) {
-            if(v.getEleitor().equals(voto.getEleitor())){
-                votos.remove(v);
-            }
-        }
-    }
-    
     public ArrayList<Voto> retornaVotos(){
         return this.votos;
     }

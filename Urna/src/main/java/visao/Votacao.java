@@ -64,13 +64,11 @@ public class Votacao extends javax.swing.JFrame {
     public Voto votacao(){
         Voto voto = new Voto();
         voto.setCandidato(this.candidato);
-        voto.setEleitor(this.eleitor);
         return voto;
     }
     
     public Voto votaBranco(){
         Voto voto = new Voto();
-        voto.setEleitor(eleitor);
         voto.setCandidato(null);
         return voto;
     }
@@ -537,7 +535,7 @@ public class Votacao extends javax.swing.JFrame {
     }//GEN-LAST:event_botao0ActionPerformed
 
     private void botaoBrancoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBrancoActionPerformed
-       
+       votaBranco();
     }//GEN-LAST:event_botaoBrancoActionPerformed
 
     private void botaoCorrigeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCorrigeActionPerformed
@@ -548,6 +546,7 @@ public class Votacao extends javax.swing.JFrame {
         String erro = validaCampos();
         if (!erro.equals("")) {
             JOptionPane.showMessageDialog(this, erro, "Erro ao cadastrar Eleitor", JOptionPane.ERROR_MESSAGE);
+            limpaCampos();
             return;
         }
         Voto v = votacao();

@@ -10,16 +10,7 @@ package modelo;
  * @author weth
  */
 public class Voto {
-    private Eleitor eleitor;
     private Candidato candidato;
-
-    public Eleitor getEleitor() {
-        return eleitor;
-    }
-
-    public void setEleitor(Eleitor eleitor) {
-        this.eleitor = eleitor;
-    }
 
     public Candidato getCandidato() {
         return candidato;

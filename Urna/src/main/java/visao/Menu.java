@@ -9,6 +9,7 @@ package visao;
 
 import dao.VotoDao;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -128,9 +129,13 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void menuVotarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuVotarActionPerformed
-        Login l = new Login(votoDao);
-        l.setVisible(true);
-        l.setAlwaysOnTop(true);
+        Integer atualizar = JOptionPane.showConfirmDialog(this, "Deseja atualizar os arquivos de pesquisa?");
+        if(atualizar != JOptionPane.CANCEL_OPTION){
+            Login l = new Login(votoDao,atualizar);
+            l.setVisible(true);
+            l.setAlwaysOnTop(true);
+        }
+       
     }//GEN-LAST:event_menuVotarActionPerformed
 
     private void menuEnviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEnviaActionPerformed
