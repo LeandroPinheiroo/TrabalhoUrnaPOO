@@ -71,17 +71,18 @@ public class Login extends javax.swing.JFrame {
                         sleep(500);
                         barraProgresso.setValue(20);
                         criaArquivoCandidatos();
+                        candidatos = geraObjetoCandidato();
                         barraProgresso.setValue(45);
                         criaArquivoPartidos();
+                        partidos = geraObjetoPartido();
                         barraProgresso.setValue(60);
                     } catch (InterruptedException e) {
                         Logger.getLogger("Erro");
                     }
-                    
                 }
             };
             t.start();
-            new Thread() {
+            Thread t2 = new Thread() {
                 public void run() {
                     criaArquivoEleitores();
                     barraProgresso.setValue(100);
@@ -94,10 +95,13 @@ public class Login extends javax.swing.JFrame {
                     }
                     barraProgresso.setVisible(false);
                 }
-            }.start(); 
+            };
+            t2.start();
+
+        } else {
+            this.partidos = this.geraObjetoPartido();
+            this.candidatos = this.geraObjetoCandidato();
         }
-        this.candidatos = geraObjetoCandidato();
-        this.partidos = geraObjetoPartido();
         this.votoDao = votoDao;
     }
 
