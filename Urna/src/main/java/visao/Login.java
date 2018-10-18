@@ -47,8 +47,10 @@ public class Login extends javax.swing.JFrame {
         Thread t1 = new Thread() {
             public void run() {
                 initComponents();
+                barraProgresso.setVisible(false);
                 setLocationRelativeTo(null);
                 setTitle("Login");
+                campoCpf.setEditable(true);
             }
         };
         t1.start();
@@ -58,6 +60,8 @@ public class Login extends javax.swing.JFrame {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
         if (atualizar == JOptionPane.YES_OPTION) {
+            barraProgresso.setVisible(true);
+            botaoEntrar.setEnabled(false);
             barraProgresso.setValue(0);
             Thread t = new Thread() {
                 @Override
@@ -79,9 +83,10 @@ public class Login extends javax.swing.JFrame {
             t.start();
             new Thread() {
                 public void run() {
-                    
                     criaArquivoEleitores();
                     barraProgresso.setValue(100);
+                    campoCpf.setEditable(true);
+                    botaoEntrar.setEnabled(true);
                     try {
                         sleep(1000);
                     } catch (InterruptedException ex) {
@@ -89,11 +94,11 @@ public class Login extends javax.swing.JFrame {
                     }
                     barraProgresso.setVisible(false);
                 }
-            }.start();
-            
+            }.start(); 
         }
         this.candidatos = geraObjetoCandidato();
         this.partidos = geraObjetoPartido();
+        this.votoDao = votoDao;
     }
 
     public void criaArquivoEleitores() {
