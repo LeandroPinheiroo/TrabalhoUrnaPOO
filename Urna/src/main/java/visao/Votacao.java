@@ -8,7 +8,12 @@ package visao;
 import dao.VotoDao;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import modelo.Candidato;
@@ -30,7 +35,8 @@ public class Votacao extends javax.swing.JFrame {
     Eleitor eleitor;
     Candidato candidato;
     VotoDao votoDao;
-    public Votacao(ArrayList<Candidato> candidatos,ArrayList<Partido> partidos,Eleitor eleitor,VotoDao votoDao) {
+
+    public Votacao(ArrayList<Candidato> candidatos, ArrayList<Partido> partidos, Eleitor eleitor, VotoDao votoDao) {
         initComponents();
         this.setTitle("Urna");
         this.candidatos = candidatos;
@@ -39,8 +45,8 @@ public class Votacao extends javax.swing.JFrame {
         this.votoDao = votoDao;
         setPropriedades();
     }
-    
-    public void setCandidadto(int numero){
+
+    public void setCandidadto(int numero) {
         for (Candidato candidato : this.candidatos) {
             if (candidato.getNumero() == numero) {
                 campoNome.setText(candidato.getNome());
@@ -50,52 +56,53 @@ public class Votacao extends javax.swing.JFrame {
             }
         }
     }
-    
-    public void numeroPressionado(ActionEvent e){
+
+    public void numeroPressionado(ActionEvent e) {
         String temp = campoVotacao.getText();
-        if(temp.length() < 2)
+        if (temp.length() < 2) {
             temp += e.getActionCommand();
-            campoVotacao.setText(temp);
-        if(temp.length() == 2){
+        }
+        campoVotacao.setText(temp);
+        if (temp.length() == 2) {
             this.setCandidadto(Integer.parseInt(temp));
         }
     }
 
-    public Voto votacao(){
+    public Voto votacao() {
         Voto voto = new Voto();
         voto.setCandidato(this.candidato);
         return voto;
     }
-    
-    public Voto votaBranco(){
+
+    public Voto votaBranco() {
         Voto voto = new Voto();
         voto.setCandidato(null);
         return voto;
     }
-    
-    public String validaCampos(){
-        if(campoNome.getText().equals("") || campoNumero.getText().equals("") || campoPartido.getText().equals("")
-                || campoVotacao.getText().equals("")){
+
+    public String validaCampos() {
+        if (campoNome.getText().equals("") || campoNumero.getText().equals("") || campoPartido.getText().equals("")
+                || campoVotacao.getText().equals("")) {
             return "Candidato não selecionado! Por favor selecione seu candidato";
         }
         return "";
     }
-    
-    public void limparCampos(){
+
+    public void limparCampos() {
         campoNome.setText("");
         campoNumero.setText("");
         campoPartido.setText("");
         campoVotacao.setText("");
     }
-    
-    public void limpaCampos(){
+
+    public void limpaCampos() {
         campoNome.setText("");
         campoNumero.setText("");
         campoPartido.setText("");
         campoVotacao.setText("");
     }
-    
-    public final void setPropriedades(){
+
+    public final void setPropriedades() {
         botaoBranco.setContentAreaFilled(false);
         botaoBranco.setOpaque(true);
         botaoBranco.setBackground(Color.WHITE);
@@ -110,6 +117,7 @@ public class Votacao extends javax.swing.JFrame {
         campoNumero.setHorizontalAlignment(JTextField.CENTER);
         campoPartido.setHorizontalAlignment(JTextField.CENTER);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -535,7 +543,7 @@ public class Votacao extends javax.swing.JFrame {
     }//GEN-LAST:event_botao0ActionPerformed
 
     private void botaoBrancoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBrancoActionPerformed
-       votaBranco();
+        votaBranco();
     }//GEN-LAST:event_botaoBrancoActionPerformed
 
     private void botaoCorrigeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCorrigeActionPerformed
@@ -551,6 +559,17 @@ public class Votacao extends javax.swing.JFrame {
         }
         Voto v = votacao();
         votoDao.cadastraVoto(v);
+        InputStream musica;
+        String caminho = "somurna.wav";
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(caminho).getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
         JOptionPane.showMessageDialog(this, "Voto cadastrado com sucesso", "Cadastramento de Voto", JOptionPane.INFORMATION_MESSAGE);
         this.limparCampos();
         this.dispose();
@@ -559,7 +578,6 @@ public class Votacao extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botao0;
