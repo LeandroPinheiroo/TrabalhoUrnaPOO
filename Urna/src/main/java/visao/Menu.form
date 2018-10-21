@@ -78,6 +78,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuVotar">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icones/votar.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Votar"/>
               </Properties>
               <Events>
@@ -96,6 +99,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuEnvia">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/icones/enviarNuvem.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Enviar Votos"/>
               </Properties>
               <Events>

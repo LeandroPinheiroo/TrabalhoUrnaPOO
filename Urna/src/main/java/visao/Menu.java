@@ -22,6 +22,7 @@ public class Menu extends javax.swing.JFrame {
      * Creates new form Menu
      */
     VotoDao votoDao = new VotoDao();
+    /*Construtor do frame*/
     public Menu() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -83,6 +84,7 @@ public class Menu extends javax.swing.JFrame {
         jMenu2.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         jMenu2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+        menuVotar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/votar.png"))); // NOI18N
         menuVotar.setText("Votar");
         menuVotar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,6 +98,7 @@ public class Menu extends javax.swing.JFrame {
         jMenu9.setText("Envio de Votos");
         jMenu9.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
 
+        menuEnvia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/enviarNuvem.png"))); // NOI18N
         menuEnvia.setText("Enviar Votos");
         menuEnvia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

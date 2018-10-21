@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author weth
+ * @author João Paulo e Leandro
  */
 public class EnviaVotos extends javax.swing.JFrame {
 
@@ -22,20 +22,31 @@ public class EnviaVotos extends javax.swing.JFrame {
      */
     
     VotoDao votoDao;
+    /*Construtor do Frame*/
     public EnviaVotos(VotoDao votoDao) {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setTitle("Envia votos");
         this.votoDao = votoDao;
     }
-    
+    /**Método para enviar os votos para o Google Drive
+     * @author João Paulo e Leandro
+     * @version 1.0
+     * @return void
+     */
     public void EnviarVotos(){
+        /*verifica se o array de votos está vazio*/
         if(votoDao.retornaVotos().isEmpty()){
+            /*se estiver, mostra mensagem avisando que não houve nenhum voto ainda*/
             JOptionPane.showMessageDialog(this, "Não foi realizado nenhum voto, arquivo não pode ser enviado!");
         }else{
+            /*se houver votos, chama o método para criar o arquivo JSON*/
             Arquivo.criaArquivoJSON((ArrayList<Object>)(Object)votoDao.retornaVotos(),"votação.json");
+            /*chama a instancia da conexão com o Drive*/
             ConexaoDrive.getInstance();
+            /*chama a função de enviar o arquivo para o Drive*/
             ConexaoDrive.criaArquivo("votação.json","votação.json");
+            /*mostra mensagem de sucesso*/
             JOptionPane.showMessageDialog(this, "Dados de votação enviados com sucesso!");
         }
     }

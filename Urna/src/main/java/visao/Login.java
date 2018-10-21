@@ -31,7 +31,7 @@ import modelo.Partido;
 
 /**
  *
- * @author weth
+ * @author João Paulo e Leandro
  */
 public class Login extends javax.swing.JFrame {
 
@@ -42,29 +42,46 @@ public class Login extends javax.swing.JFrame {
     ArrayList<Partido> partidos;
     Eleitor eleitor = null;
     VotoDao votoDao;
-
+    /**Construtor do Frame
+     *@param VotoDao, instancia do Dao da classe de votos
+     *@param Integer, verificação se vai atualizar dados ou não
+     *@version 4.0
+     */
     public Login(VotoDao votoDao, Integer atualizar) {
+        /*cria a primeira thread, para carregar os componentes do frame*/
         Thread t1 = new Thread() {
             public void run() {
+                /*cria os componentes*/
                 initComponents();
+                /*deixa a barra de progresso invisivel*/
                 barraProgresso.setVisible(false);
+                /*coloca a localização do frame no meio*/
                 setLocationRelativeTo(null);
+                /*coloca o titulo do frame*/
                 setTitle("Login");
+                /*coloca o campo do CPF como editável*/
                 campoCpf.setEditable(true);
             }
         };
         t1.start();
+        /*da um join na thread, para obrigar que ele tenha sua execução terminada*/
         try {
             t1.join();
         } catch (InterruptedException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*se for para atualizar os dados*/
         if (atualizar == JOptionPane.YES_OPTION) {
+            /*coloca a barra de progresso vísivel*/
             barraProgresso.setVisible(true);
+            /*desabilita o botão de conectar para obrigar o usuário a esperar os arquivos carregarem*/
             botaoEntrar.setEnabled(false);
+            /*coloca o valor da barra de progresso como 0, indicando que vai começar a carregar o arquivo*/
             barraProgresso.setValue(0);
+            /*cria a nova thread*/
             Thread t = new Thread() {
                 @Override
+                /*essa thread vai carregar os primeiros dois arquivos*/
                 public void run() {
                     try {
                         barraProgresso.setValue(10);
@@ -82,6 +99,7 @@ public class Login extends javax.swing.JFrame {
                 }
             };
             t.start();
+            /*já a ultima thread, vai carregar o arquivo mais pesado, então ela vai por ultimo*/
             Thread t2 = new Thread() {
                 public void run() {
                     criaArquivoEleitores();
