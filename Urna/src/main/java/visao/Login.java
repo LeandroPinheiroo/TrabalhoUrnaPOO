@@ -89,10 +89,10 @@ public class Login extends javax.swing.JFrame {
                         barraProgresso.setValue(20);
                         criaArquivoCandidatos();
                         candidatos = geraObjetoCandidato();
-                        barraProgresso.setValue(45);
+                        barraProgresso.setValue(50);
                         criaArquivoPartidos();
                         partidos = geraObjetoPartido();
-                        barraProgresso.setValue(60);
+                        barraProgresso.setValue(70);
                     } catch (InterruptedException e) {
                         Logger.getLogger("Erro");
                     }
@@ -102,11 +102,15 @@ public class Login extends javax.swing.JFrame {
             /*já a ultima thread, vai carregar o arquivo mais pesado, então ela vai por ultimo*/
             Thread t2 = new Thread() {
                 public void run() {
+                    /*chama o método de baixar o arquivo de eleitores*/
                     criaArquivoEleitores();
+                    /*barra de progresso vai para 100, para demonstrar que os arquivos já foram carregados*/
                     barraProgresso.setValue(100);
+                    /*permite a conexão no login, liberado o campo CPF e o botão de conectar*/
                     campoCpf.setEditable(true);
                     botaoEntrar.setEnabled(true);
                     try {
+                        /*depois da um tempo de 1 segundo, antes de fazer a barra de progresso sumir*/
                         sleep(1000);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
@@ -117,87 +121,132 @@ public class Login extends javax.swing.JFrame {
             t2.start();
 
         } else {
+            /*se a escolha para atualizar for não, só gera os arquivos de cache com os dados atuais*/
             this.partidos = this.geraObjetoPartido();
             this.candidatos = this.geraObjetoCandidato();
         }
         this.votoDao = votoDao;
     }
-
+    /**Método para baixar os dados do arquivo de eleitores do GDrive, e criar um arquivo local com esses dados
+     * @author João Paulo e  Leandro
+     * @version 4.5
+     */
     public void criaArquivoEleitores() {
+        /*inicia a conexão com o GDrive*/
         ConexaoDrive.getInstance();
+        /*pega a listagem de arquivos contidos lá*/
         List<com.google.api.services.drive.model.File> lista_arquivos = ConexaoDrive.listaArquivos();
+        /*varre a lista de arquivos*/
         for (com.google.api.services.drive.model.File lista_arquivo : lista_arquivos) {
+            /*para verificar o qual arquivo tem o mesmo nome que o de eleitores*/
             if (lista_arquivo.getName().equals("eleitores.json")) {
                 try {
+                    /*pega o conteudo do arquivo*/
                     String conteudo = ConexaoDrive.leArquivoGD(lista_arquivo.getId());
+                    /*e salva em outro arquivo local*/
                     Arquivo.criaArquivo(conteudo, "eleitores.json");
+                    /*retorna so para parar a execução*/
                     return;
-                } catch (IOException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (HTTPException ex) {
+                /*caso não consiga, lança exceção IO ou exceção HTTP*/
+                } catch (IOException | HTTPException ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 return;
             }
         }
     }
-
+    /**Método para baixar os dados do arquivo de candidatos e coloca-los em um arquivo local
+     * @author João Paulo e Leandro
+     * @version 4.5
+     */
     public void criaArquivoCandidatos() {
+        /*inicia a conexão com o GDrive*/
         ConexaoDrive.getInstance();
+        /*pega a listagem de arquivos contidos lá*/
         List<com.google.api.services.drive.model.File> lista_arquivos = ConexaoDrive.listaArquivos();
+        /*varre a lista de arquivos*/
         for (com.google.api.services.drive.model.File lista_arquivo : lista_arquivos) {
+            /*para verificar o qual arquivo tem o mesmo nome que o de candidatos*/
             if (lista_arquivo.getName().equals("candidatos.json")) {
                 try {
+                    /*pega o conteudo do arquivo*/
                     String conteudo = ConexaoDrive.leArquivoGD(lista_arquivo.getId());
+                    /*e salva em outro arquivo local*/
                     Arquivo.criaArquivo(conteudo, "candidatos.json");
-
+                    /*retorna so para parar a execução*/
                     return;
-                } catch (IOException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (HTTPException ex) {
+                /*caso não consiga, lança exceção IO ou exceção HTTP*/
+                } catch (IOException | HTTPException ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 return;
             }
         }
     }
-
+    /**Método para baixar os dados do arquivo de partidos do GDrive e coloca-los em um arquivo local
+     * @author João Paulo e Leandro
+     * @version 4.5
+     */
     public void criaArquivoPartidos() {
+        /*inicia a conexão com o GDrive*/
         ConexaoDrive.getInstance();
+        /*pega a listagem de arquivos contidos lá*/
         List<com.google.api.services.drive.model.File> lista_arquivos = ConexaoDrive.listaArquivos();
+        /*varre a lista de arquivos*/
         for (com.google.api.services.drive.model.File lista_arquivo : lista_arquivos) {
+            /*para verificar o qual arquivo tem o mesmo nome que o de partidos*/
             if (lista_arquivo.getName().equals("partidos.json")) {
                 try {
+                    /*pega o conteudo do arquivo*/
                     String conteudo = ConexaoDrive.leArquivoGD(lista_arquivo.getId());
+                    /*e salva em outro arquivo local*/
                     Arquivo.criaArquivo(conteudo, "partidos.json");
+                    /*retorna so para parar a execução*/
                     return;
-                } catch (IOException ex) {
-                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (HTTPException ex) {
+                /*caso não consiga, lança exceção IO ou exceção HTTP*/
+                } catch (IOException | HTTPException ex) {
                     Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 return;
             }
         }
     }
-
+    
+    /**Método para comparar os dados da matriz imagem recebida no login, e a cadastrada no eleitor
+     e verificar se são realmente iguais
+     * @author João Paulo e Leandro
+     * @param Integer[][], matriz imagem que o usuário cadastrou como senha
+     * @param Eleitor, instancia do Eleitor
+     * @return Boolean, retorna se as imagens são iguais ou não
+     * @version 2.3
+     */
     public boolean comparaMatriz(Integer matriz[][], Eleitor eleitor) {
+        /*pega as linhas e colunas da matriz*/
         int linhas;
         int colunas;
         linhas = matriz.length;
         colunas = matriz[0].length;
+        /*varre a matriz entre linhas e colunas*/
         for (int i = 0; i < linhas; i++) {
             for (int j = 0; j < colunas; j++) {
+                /*se alguma parte da matriz imagem, for diferente da outra, já retorna erro e mostra mensagem*/
                 if (!Objects.equals(matriz[i][j], eleitor.getMatriz_imagem()[i][j])) {
                     JOptionPane.showMessageDialog(this, "Imagem de acesso invalida", "Erro ao entrar", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
             }
         }
+        /*senão retorna verdadeiro*/
         return true;
     }
-
+    /**Método para validar se os campos estão preenchidos corretamente
+     * @author João Paulo e Leandro
+     * @version 1.0
+     * @return boolean, retorna se os campos estão válidos ou não
+     */
     public boolean validaCampos() {
+        /*Método simples, verifica se os campos não estão com dados preenchidos, e retorna false se não estiverem
+        e mostra mensagem de erro*/
         if (campoCpf.getText().equals("   .   .   -  ")) {
             JOptionPane.showMessageDialog(this, "Entre com o CPF para efetuar login", "Erro ao entrar", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -205,93 +254,145 @@ public class Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Entre com a imagem de acesso para efetuar login", "Erro ao entrar", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        /*se estiver tudo ok, retorna verdadeiro*/
         return true;
     }
-
+    /**Método para validar o login do eleitor, e permiter a conexão com o sistema
+     * @author João Paulo e Leandro
+     * @param Integer[][], matriz imagem que o usuário passou no campo senha
+     * @param String, CPF que o eleitor passaou no campo CPF
+     * @param ArrayList Eleitor, arraylist de eleitores cadastrados
+     * @return boolean, retorna se o login é valido ou não
+     * @version 3.5
+     */
     public boolean validaLogin(Integer matriz[][], String cpf, ArrayList<Eleitor> eleitores) {
+        /*valida os campos primeiro*/
         if (validaCampos() == false) {
             return false;
         }
+        /*depois varre a lista de eleitores*/
         for (Eleitor eleitor : eleitores) {
+            /*e verifica um eleitor que bate com o cpf recebido*/
             if (eleitor.getCpf().equals(cpf)) {
+                /*então compara se a imagem é a mesma*/
                 if (comparaMatriz(matriz, eleitor)) {
+                    /*se for retorna true*/
                     this.eleitor = eleitor;
                     return true;
                 } else {
+                    /*senão retorna false*/
                     return false;
                 }
             }
         }
+        /*e mostra mensagem de erro*/
         JOptionPane.showMessageDialog(this, "CPF não cadastrado", "Erro ao entrar", JOptionPane.ERROR_MESSAGE);
         return false;
     }
-
+    /**Método para pegar o arquivo de Partidos, e jogar os dados em um arraylist
+     * @author João Paulo e Leandro
+     * @return ArrayList Partido, retorna o arraylist de partidos
+     * @version 2.0
+     */
     public ArrayList<Partido> geraObjetoPartido() {
+        /*instancia a classe para gerar arquivo JSON*/
         Gson gson = new Gson();
         FileInputStream arquivoEntrada;
         ArrayList<Partido> partidos = null;
         try {
+            /*pega o arquivo*/
             arquivoEntrada = new FileInputStream("partidos.json");
+            /*lê os dados do arquivo*/
             BufferedReader leitor = new BufferedReader(new InputStreamReader(arquivoEntrada));
             partidos = new ArrayList();
             String strLine;
+            /*e vai escrevendo linha por linha, cada linha, um indice no arraylist*/
             while ((strLine = leitor.readLine()) != null) {
                 partidos.add(gson.fromJson(strLine, Partido.class));
             }
+            /*depois fecha o arquivo*/
             leitor.close();
+        /*caso não consiga, lança exceções de FileNotFound e IO*/
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*e no fim retorna o arraylist de partidos, vazio ou preenchido depende se conseguiu ou não*/
         return partidos;
     }
-
+      /**Método para pegar o arquivo de Candidatos, e jogar os dados em um arraylist
+     * @author João Paulo e Leandro
+     * @return ArrayList Partido, retorna o arraylist de candidatos
+     * @version 2.0
+     */
     public ArrayList<Candidato> geraObjetoCandidato() {
+        /*instancia a classe para gerar arquivo JSON*/
         Gson gson = new Gson();
         FileInputStream arquivoEntrada;
         ArrayList<Candidato> candidatos = null;
         try {
+            /*pega o arquivo*/
             arquivoEntrada = new FileInputStream("candidatos.json");
+            /*lê os dados do arquivo*/
             BufferedReader leitor = new BufferedReader(new InputStreamReader(arquivoEntrada));
             candidatos = new ArrayList();
             String strLine;
+            /*e vai escrevendo linha por linha, cada linha, um indice no arraylist*/
             while ((strLine = leitor.readLine()) != null) {
                 candidatos.add(gson.fromJson(strLine, Candidato.class));
             }
+            /*depois fecha o arquivo*/
             leitor.close();
+          /*caso não consiga, lança exceções de FileNotFound e IO*/
         } catch (FileNotFoundException ex) {
             JOptionPane.showMessageDialog(null, "Erro, arquivo não localizado!");
             this.dispose();
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*e no fim retorna o arraylist de partidos, vazio ou preenchido depende se conseguiu ou não*/
         return candidatos;
     }
-
+    /**Método para ajustar os dados dos leitores cadastrados
+     * @author João Paulo e Leandro
+     * @return Boolean, retorna se deu tudo certo ou não
+     * @version 2.0
+     */
     public Boolean verificaLogin() {
+        /*lê a matriz imagem do campo de imagem*/
         Integer imagem[][] = Arquivo.leImagemMatriz(campoArquivo.getText());
         Gson gson = new Gson();
         FileInputStream arquivoEntrada;
         try {
+            /*abre o arquivo de eleitores*/
             arquivoEntrada = new FileInputStream("eleitores.json");
+            /*lê os dados do arquivo*/
             BufferedReader leitor = new BufferedReader(new InputStreamReader(arquivoEntrada));
             ArrayList<Eleitor> eleitores = new ArrayList();
             String strLine;
+            /*coloca cada linha do arquivo em cada indice do arraylist*/
             while ((strLine = leitor.readLine()) != null) {
+                /*adiciona no arraylist*/
                 eleitores.add(gson.fromJson(strLine, Eleitor.class));
             }
+            /*fecha o arquivo*/
             leitor.close();
+            /*depois valida o login com a função acima*/
             if (validaLogin(imagem, campoCpf.getText(), eleitores)) {
+                /*e caso seja valido, mostra mensagem de sucesso e retorna true*/
                 JOptionPane.showMessageDialog(this, "Usuario Logado com sucesso", "Entrou", JOptionPane.INFORMATION_MESSAGE);
                 return true;
             }
+        /*caso não consiga, lança exceções FileNotFound e IO*/
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
+        /*retorna mensagem de erro, caso falhe em conectar*/
         JOptionPane.showMessageDialog(this, "Falha ao conectar no sistema!!", "Erro", JOptionPane.ERROR_MESSAGE);
+        /*e retorna false*/
         return false;
     }
 

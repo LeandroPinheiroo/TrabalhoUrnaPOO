@@ -35,7 +35,14 @@ public class Votacao extends javax.swing.JFrame {
     Eleitor eleitor;
     Candidato candidato;
     VotoDao votoDao;
-
+    /**Construtor do frame
+     * @author João Paulo
+     * @param ArrayList Candidato
+     * @param Arraylist Partidos
+     * @param Eleitor eleitor
+     * @param VotoDao votoDao
+     * @version 1.0
+     */
     public Votacao(ArrayList<Candidato> candidatos, ArrayList<Partido> partidos, Eleitor eleitor, VotoDao votoDao) {
         initComponents();
         this.setTitle("Urna");
@@ -45,64 +52,101 @@ public class Votacao extends javax.swing.JFrame {
         this.votoDao = votoDao;
         setPropriedades();
     }
-
+    /**Método para pegar os dados de um candidato de acordo com o número dele e jogar nos campos do frame
+     * @author João Paulo e Leandro
+     * @param int, número do partido do candidato
+     * @return void
+     * @version 2.0
+     */
     public void setCandidadto(int numero) {
+        /*varre o array de candidatos*/
         for (Candidato candidato : this.candidatos) {
+            /*verifica se algum deles tem o número igual ao do parametro*/
             if (candidato.getNumero() == numero) {
+                /*se encontrar, seta os dados dele nos campos do frame*/
                 campoNome.setText(candidato.getNome());
                 campoPartido.setText(candidato.getPartido().getNome());
                 campoNumero.setText(String.valueOf(candidato.getNumero()));
+                /*e guarda o candidato*/
                 this.candidato = candidato;
             }
         }
     }
-
+    /**Método para pegar o número pressionado e adicionar no campo texto
+     * @author João Paulo e Leandro
+     * @param ActionEvent, evento de tecla
+     * @return void
+     * @version 2.5
+     */
     public void numeroPressionado(ActionEvent e) {
+        /*guarda o texto já contido no campo*/
         String temp = campoVotacao.getText();
+        /*e se não tem tamanho maior igual a 2, ainda pode receber dados, para limitar aos
+        dois números do partido*/
         if (temp.length() < 2) {
+            /*adiciona mais dados ao campo*/
             temp += e.getActionCommand();
         }
+        /*depois seta o novo valor no campo*/
         campoVotacao.setText(temp);
+        /*quando estiver igual a 2, busca o candidato daquele número*/
         if (temp.length() == 2) {
             this.setCandidadto(Integer.parseInt(temp));
         }
     }
-
+    /**Método para cadastrar o voto
+     * @author João Paulo e Leandro
+     * @return Voto, retorna a instancia do voto
+     * @version 2.0
+     */
     public Voto votacao() {
         Voto voto = new Voto();
         voto.setCandidato(this.candidato);
         return voto;
     }
-
+    /**Método para voto em branco
+     * @author João Paulo e Leandro
+     * @return Voto, retorna instancia do voto
+     * @version 2.0
+     */
     public Voto votaBranco() {
         Voto voto = new Voto();
         voto.setCandidato(null);
         return voto;
     }
-
+    /**Método para validar os campos do frame
+     * @author João Paulo e Leandro
+     * @return String, dados que não foram preenchidos
+     * @version 2.0
+     */
     public String validaCampos() {
+        /*verifica se alguns dos campos não está vazio, indicando que o usuário não selecionou o candidato*/
         if (campoNome.getText().equals("") || campoNumero.getText().equals("") || campoPartido.getText().equals("")
                 || campoVotacao.getText().equals("")) {
+            /*retorna uma string mensagem*/
             return "Candidato não selecionado! Por favor selecione seu candidato";
         }
+        /*senão retorna string vazia*/
         return "";
     }
-
+    /**Método para limpar os campos
+     * @author João Paulo e Leandro
+     * @version 1.0
+     */
     public void limparCampos() {
+        /*seta todos os textfield como string vazia*/
         campoNome.setText("");
         campoNumero.setText("");
         campoPartido.setText("");
         campoVotacao.setText("");
     }
-
-    public void limpaCampos() {
-        campoNome.setText("");
-        campoNumero.setText("");
-        campoPartido.setText("");
-        campoVotacao.setText("");
-    }
-
+    /**Método para modificar o frame de forma que se parece mais com uma urna
+     * @author João Paulo e Leandro
+     * @version 1.0
+     */
     public final void setPropriedades() {
+        /*seta as propriedades de forma que os botões de confirma, branco e 
+        corrige se parecem mais com uma urna*/
         botaoBranco.setContentAreaFilled(false);
         botaoBranco.setOpaque(true);
         botaoBranco.setBackground(Color.WHITE);
@@ -547,14 +591,14 @@ public class Votacao extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoBrancoActionPerformed
 
     private void botaoCorrigeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCorrigeActionPerformed
-        this.limpaCampos();
+        this.limparCampos();
     }//GEN-LAST:event_botaoCorrigeActionPerformed
 
     private void botaoConfirmaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoConfirmaActionPerformed
         String erro = validaCampos();
         if (!erro.equals("")) {
             JOptionPane.showMessageDialog(this, erro, "Erro ao cadastrar Eleitor", JOptionPane.ERROR_MESSAGE);
-            limpaCampos();
+            limparCampos();
             return;
         }
         Voto v = votacao();
