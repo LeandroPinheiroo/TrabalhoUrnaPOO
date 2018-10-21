@@ -34,7 +34,7 @@ public class EnviaVotos extends javax.swing.JFrame {
      * @version 1.0
      * @return void
      */
-    public void EnviarVotos(){
+    public void enviarVotos(){
         /*verifica se o array de votos está vazio*/
         if(votoDao.retornaVotos().isEmpty()){
             /*se estiver, mostra mensagem avisando que não houve nenhum voto ainda*/
@@ -107,7 +107,7 @@ public class EnviaVotos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botaoEnviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEnviaActionPerformed
-        EnviarVotos();
+        enviarVotos();
     }//GEN-LAST:event_botaoEnviaActionPerformed
 
     /**
