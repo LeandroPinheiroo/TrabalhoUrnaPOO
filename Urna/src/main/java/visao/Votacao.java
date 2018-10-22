@@ -60,15 +60,19 @@ public class Votacao extends javax.swing.JFrame {
      */
     public void setCandidadto(int numero) {
         /*varre o array de candidatos*/
-        for (Candidato candidato : this.candidatos) {
-            /*verifica se algum deles tem o número igual ao do parametro*/
-            if (candidato.getNumero() == numero) {
-                /*se encontrar, seta os dados dele nos campos do frame*/
-                campoNome.setText(candidato.getNome());
-                campoPartido.setText(candidato.getPartido().getNome());
-                campoNumero.setText(String.valueOf(candidato.getNumero()));
-                /*e guarda o candidato*/
-                this.candidato = candidato;
+        if(!this.candidatos.isEmpty()){
+            for (Candidato candidato : this.candidatos) {
+                if(candidato != null){//caso candidato nao seja null
+                    /*verifica se algum deles tem o número igual ao do parametro*/
+                    if (candidato.getNumero() == numero) {
+                        /*se encontrar, seta os dados dele nos campos do frame*/
+                        campoNome.setText(candidato.getNome());
+                        campoPartido.setText(candidato.getPartido().getNome());
+                        campoNumero.setText(String.valueOf(candidato.getNumero()));
+                        /*e guarda o candidato*/
+                        this.candidato = candidato;
+                    }
+                }
             }
         }
     }
