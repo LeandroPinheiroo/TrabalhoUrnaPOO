@@ -538,7 +538,7 @@ public class Votacao extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(painelVisual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 12, Short.MAX_VALUE))
-                    .addComponent(painelBotoes, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE))
+                    .addComponent(painelBotoes, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -587,7 +587,21 @@ public class Votacao extends javax.swing.JFrame {
     }//GEN-LAST:event_botao0ActionPerformed
 
     private void botaoBrancoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoBrancoActionPerformed
-        votaBranco();
+        Voto v = votaBranco();
+        votoDao.cadastraVoto(v);
+        String caminho = "somurna.wav";
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(caminho).getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
+        JOptionPane.showMessageDialog(this, "Voto em branco cadastrado com sucesso", "Voto em BRANCO", JOptionPane.INFORMATION_MESSAGE);
+        this.limparCampos();
+        this.dispose();
     }//GEN-LAST:event_botaoBrancoActionPerformed
 
     private void botaoCorrigeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCorrigeActionPerformed

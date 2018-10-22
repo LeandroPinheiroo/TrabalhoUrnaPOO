@@ -120,10 +120,6 @@ public class Login extends javax.swing.JFrame {
             };
             t2.start();
 
-        } else {
-            /*se a escolha para atualizar for não, só gera os arquivos de cache com os dados atuais*/
-            this.partidos = this.geraObjetoPartido();
-            this.candidatos = this.geraObjetoCandidato();
         }
         this.votoDao = votoDao;
     }
