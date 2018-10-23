@@ -120,6 +120,9 @@ public class Login extends javax.swing.JFrame {
             };
             t2.start();
 
+        }else{
+            candidatos = geraObjetoCandidato();
+            partidos = geraObjetoPartido();
         }
         this.votoDao = votoDao;
     }
@@ -132,6 +135,10 @@ public class Login extends javax.swing.JFrame {
         ConexaoDrive.getInstance();
         /*pega a listagem de arquivos contidos lá*/
         List<com.google.api.services.drive.model.File> lista_arquivos = ConexaoDrive.listaArquivos();
+        if(lista_arquivos == null){
+            JOptionPane.showMessageDialog(this, "Erro, confira sua conexão com a internet","Erro",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         /*varre a lista de arquivos*/
         for (com.google.api.services.drive.model.File lista_arquivo : lista_arquivos) {
             /*para verificar o qual arquivo tem o mesmo nome que o de eleitores*/
@@ -160,6 +167,10 @@ public class Login extends javax.swing.JFrame {
         ConexaoDrive.getInstance();
         /*pega a listagem de arquivos contidos lá*/
         List<com.google.api.services.drive.model.File> lista_arquivos = ConexaoDrive.listaArquivos();
+        if(lista_arquivos == null){
+            JOptionPane.showMessageDialog(this, "Erro, confira sua conexão com a internet","Erro",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         /*varre a lista de arquivos*/
         for (com.google.api.services.drive.model.File lista_arquivo : lista_arquivos) {
             /*para verificar o qual arquivo tem o mesmo nome que o de candidatos*/
@@ -188,6 +199,10 @@ public class Login extends javax.swing.JFrame {
         ConexaoDrive.getInstance();
         /*pega a listagem de arquivos contidos lá*/
         List<com.google.api.services.drive.model.File> lista_arquivos = ConexaoDrive.listaArquivos();
+        if(lista_arquivos == null){
+            JOptionPane.showMessageDialog(this, "Erro, confira sua conexão com a internet","Erro",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         /*varre a lista de arquivos*/
         for (com.google.api.services.drive.model.File lista_arquivo : lista_arquivos) {
             /*para verificar o qual arquivo tem o mesmo nome que o de partidos*/
