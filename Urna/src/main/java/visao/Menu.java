@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author leandro
+ * @author João Paulo e Leandro
  */
 public class Menu extends javax.swing.JFrame {
 
@@ -78,6 +78,7 @@ public class Menu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/eleicoes.png"))); // NOI18N
 
         jMenu2.setText("Votação");

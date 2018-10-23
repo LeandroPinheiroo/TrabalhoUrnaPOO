@@ -23,7 +23,7 @@ import modelo.Voto;
 
 /**
  *
- * @author weth
+ * @author João Paulo e Leandro
  */
 public class Votacao extends javax.swing.JFrame {
 
